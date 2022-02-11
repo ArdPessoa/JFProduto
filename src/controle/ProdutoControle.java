@@ -56,35 +56,29 @@ public class ProdutoControle {
             return false;
         }
     }
+
     public static boolean Atualizar(Produto p) {
         try {
             Connection conn = BancoDados.getConexao(); //conectar com o bando de dados e enviar os dados salvos da classe Produto.
             String sql = "UPDATE  produto  ";
             sql += "SET produto = ?, ";
-            sql += "SET  desprotudo = ?, ";
-            sql += "SET preco = ?, ";
-            sql += "SET nomecategoria = ?, "; 
-            sql += "SET idcategoria =? ";
+            sql += "  desproduto = ?, ";
+            sql += " preco = ?, ";
+            sql += " idcategoria = ?, ";
+            sql += " nomecategoria =? ";
             sql += " WHERE id = ?; ";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, p.getProduto());
             ps.setString(2, p.getDesProduto());
             ps.setDouble(3, p.getPreco());
-            ps.setString(4, p.getNomeCategoria());
-            ps.setLong(5, p.getIdCategoria());
+            ps.setLong(4, p.getIdCategoria());
+            ps.setString(5, p.getNomeCategoria());
             ps.setLong(6, p.getId());
             int linhasafetadas = ps.executeUpdate();
             if (linhasafetadas > 0) {
-                final ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    final int lastId = rs.getInt(1);
-                    System.out.println("O numero do id é:"
-                            + lastId);
-                    return true;
+                System.out.println("Atualizou");
+                return true;
 
-                } else {
-                    return false;
-                }
             } else {
                 return false;
             }
@@ -94,7 +88,6 @@ public class ProdutoControle {
             return false;
         }
     }
-
 
     public static Produto BuscarPorId(long id) {
         try {
@@ -121,9 +114,6 @@ public class ProdutoControle {
             return null;
         }
     }
-
- 
-    
 
     public static boolean Excluir(long idProduto) {
         return true;

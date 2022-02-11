@@ -226,7 +226,7 @@ public boolean verificarCampos(
                         "Erro", JOptionPane.ERROR);
             }
         } else {
-            
+
             p.setId(Long.parseLong(txtId.getText()));
             boolean alterou = ProdutoControle.Atualizar(p);
             if (alterou) {
@@ -238,8 +238,7 @@ public boolean verificarCampos(
                         "Atualização não Efetuada!",
                         "Erro", JOptionPane.ERROR);
             }
-            }
-      
+        }
 
 
     }//GEN-LAST:event_btnCadastroActionPerformed

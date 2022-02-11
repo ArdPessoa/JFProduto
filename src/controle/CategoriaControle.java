@@ -134,6 +134,30 @@ public class CategoriaControle {
             return null;
         }
     }
+    public static List<Categoria> ListarCategorias() {
+        try {
+
+            Connection conn = BancoDados.getConexao();
+            String sql = "SELECT * FROM categoria; ";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            List<Categoria> lista = new ArrayList();
+            final ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+
+                Categoria c = new Categoria();
+                c.setIdC(rs.getLong("id"));
+                c.setNomeC(rs.getString("nome"));
+                c.setDescCategoria(rs.getString("descricao"));
+                c.setDataCadastro(rs.getDate("datacadastro"));
+                lista.add(c);
+            }
+            return lista;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }
 
 
