@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Categoria;
@@ -119,9 +121,33 @@ public class ProdutoControle {
         return true;
     }
 
-    public List<Produto> ListarTodos() {
+    public static List<Produto> ListarProduto() {
+        try {
 
-        return null;
+            Connection conn = BancoDados.getConexao();
+            String sql = "SELECT * FROM produto; ";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            List<Produto> lista = new ArrayList();
+            final ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+
+                Produto c = new Produto();
+                c.setId(rs.getLong("id"));
+                c.setProduto(rs.getString("produto"));
+                c.setDesProduto(rs.getString("desproduto"));
+                c.setPreco(rs.getDouble("preco"));
+                c.setIdCategoria(rs.getLong("idcategoria"));
+                c.setDataCadastro(rs.getDate("datacadastro"));
+                c.setNomeCategoria(rs.getString("nomecategoria"));
+                lista.add(c);
+            }
+            return lista;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    
     }
 
-}
