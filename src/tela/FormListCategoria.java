@@ -7,6 +7,7 @@ package tela;
 
 import controle.CategoriaControle;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Categoria;
 
@@ -35,6 +36,9 @@ public class FormListCategoria extends javax.swing.JFrame {
         btnVoltar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCategoria = new javax.swing.JTable();
+        lblId = new javax.swing.JLabel();
+        txtId = new javax.swing.JTextField();
+        btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -70,6 +74,15 @@ public class FormListCategoria extends javax.swing.JFrame {
             tblCategoria.getColumnModel().getColumn(3).setPreferredWidth(350);
         }
 
+        lblId.setText("Id:");
+
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Lixeira.png"))); // NOI18N
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -78,7 +91,12 @@ public class FormListCategoria extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblId)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnExcluir)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnVoltar))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE))
                 .addContainerGap())
@@ -87,8 +105,12 @@ public class FormListCategoria extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnVoltar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnVoltar)
+                    .addComponent(lblId)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExcluir))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -98,11 +120,52 @@ public class FormListCategoria extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        List<Categoria>categoria=
-                CategoriaControle.ListarCategorias();
+        this.getRecarregarLista();
+
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // TODO add your handling code here:
+        Long id = Long.parseLong(txtId.getText());
+
+        Object[] options = {"Confirmar", "Cancelar"};
+        int confirmacao = JOptionPane.showOptionDialog(this, "Você deseja mesmo excluir esse registro?",
+                "Confirmação", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, options, options[0]);
+
+        if (confirmacao == 0) {
+
+            boolean excluiu = CategoriaControle.Excluir(id);
+            if (excluiu) {
+
+                this.getRecarregarLista();
+
+                JOptionPane.showMessageDialog(this, "Exclusão Efetuada com sucesso!",
+                        "OK", JOptionPane.INFORMATION_MESSAGE);
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Exclusão não Efetuada!",
+                        "Erro", JOptionPane.ERROR);
+            }
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
+    public void limparTabela() {
+        DefaultTableModel tblRemove = (DefaultTableModel) tblCategoria.getModel();
+        int tamanho = tblRemove.getRowCount();
+        if (tamanho > 0) {
+            for (int i = tamanho - 1; i >= 0; i--) {
+                tblRemove.removeRow(i);
+            }
+        }
+    }
+
+    public void getRecarregarLista() {
+        this.limparTabela();
+        List<Categoria> categoria
+                = CategoriaControle.ListarCategorias();
         DefaultTableModel dtmcategoria = (DefaultTableModel) tblCategoria.getModel();
-        
-        for(Categoria cat : categoria){
+
+        for (Categoria cat : categoria) {
             String[] dados = {
                 String.valueOf(cat.getIdC()),
                 cat.getNomeC(),
@@ -112,7 +175,7 @@ public class FormListCategoria extends javax.swing.JFrame {
             dtmcategoria.addRow(dados);
         }
         tblCategoria.setModel(dtmcategoria);
-    }//GEN-LAST:event_formWindowOpened
+    }
 
     /**
      * @param args the command line arguments
@@ -150,8 +213,11 @@ public class FormListCategoria extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnVoltar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblId;
     private javax.swing.JTable tblCategoria;
+    private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 }
