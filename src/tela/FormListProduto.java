@@ -5,11 +5,14 @@
  */
 package tela;
 
+import controle.CategoriaControle;
 import controle.ProdutoControle;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import modelo.Categoria;
 import modelo.Produto;
 
 /**
@@ -39,6 +42,9 @@ public class FormListProduto extends javax.swing.JFrame {
         btnVoltar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProduto = new javax.swing.JTable();
+        lblId = new javax.swing.JLabel();
+        txtId = new javax.swing.JTextField();
+        btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -79,12 +85,27 @@ public class FormListProduto extends javax.swing.JFrame {
             tblProduto.getColumnModel().getColumn(6).setPreferredWidth(500);
         }
 
+        lblId.setText("Id:");
+
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Lixeira.png"))); // NOI18N
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(lblId)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExcluir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnVoltar)
                 .addContainerGap())
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
@@ -93,7 +114,11 @@ public class FormListProduto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnVoltar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnVoltar)
+                    .addComponent(lblId)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExcluir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -105,7 +130,47 @@ public class FormListProduto extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        List<Produto> produto
+       this.getRecarregarLista();
+
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // TODO add your handling code here:
+        Long id = Long.parseLong(txtId.getText());
+
+        Object[] options = {"Confirmar", "Cancelar"};
+        int confirmacao = JOptionPane.showOptionDialog(this, "Você deseja mesmo excluir esse registro?",
+                "Confirmação", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, options, options[0]);
+
+        if (confirmacao == 0) {
+
+            boolean excluiu = ProdutoControle.ExcluirTbl(id);
+            if (excluiu) {
+
+                this.getRecarregarLista();
+
+                JOptionPane.showMessageDialog(this, "Exclusão Efetuada com sucesso!",
+                        "OK", JOptionPane.INFORMATION_MESSAGE);
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Exclusão não Efetuada!",
+                        "Erro", JOptionPane.ERROR);
+            }
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
+        public void limparTabela() {
+        DefaultTableModel tblRemove = (DefaultTableModel) tblProduto.getModel();
+        int tamanho = tblRemove.getRowCount();
+        if (tamanho > 0) {
+            for (int i = tamanho - 1; i >= 0; i--) {
+                tblRemove.removeRow(i);
+            }
+        }
+        }
+        public void getRecarregarLista() {
+        this.limparTabela();
+         List<Produto> produto
                 = ProdutoControle.ListarProduto();
         DefaultTableModel dtmproduto = (DefaultTableModel) tblProduto.getModel();
 
@@ -126,9 +191,7 @@ public class FormListProduto extends javax.swing.JFrame {
             dtmproduto.addRow(dados);
         }
         tblProduto.setModel(dtmproduto);
-
-    }//GEN-LAST:event_formWindowOpened
-
+    }
     /**
      * @param args the command line arguments
      */
@@ -173,8 +236,11 @@ public class FormListProduto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnVoltar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblId;
     private javax.swing.JTable tblProduto;
+    private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 }

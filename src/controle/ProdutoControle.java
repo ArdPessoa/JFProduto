@@ -148,6 +148,24 @@ public class ProdutoControle {
             return null;
         }
     }
+    public static boolean ExcluirTbl(long id) {
+        try {
+            Connection conn = BancoDados.getConexao(); //conectar com o bando de dados e enviar os dados salvos da classe Contato.
+            String sql = "DELETE FROM produto WHERE id = ?; ";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1, id);
+            int linhasafetadas = ps.executeUpdate();
+            if (linhasafetadas > 0) {
+                System.out.println("Apagou!!");
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro: " + e.getMessage());
+            return false;
+        }
+    }
     
     }
 
